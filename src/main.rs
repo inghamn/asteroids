@@ -1,39 +1,56 @@
-use amethyst::{
-    core::transform::TransformBundle,
-    prelude::*,
-    renderer::{
-        plugins::{RenderFlat2D, RenderToWindow},
-        types::DefaultBackend,
-        RenderingBundle,
-    },
-    utils::application_root_dir,
-};
+extern crate sdl2;
+use std::path::Path;
 
-mod asteroids;
-use crate::asteroids::Asteroids;
+use sdl2::event::Event;
+use sdl2::image::{LoadTexture};
+use sdl2::keyboard::Keycode;
+use sdl2::rect::Rect;
+use sdl2::surface::Surface;
 
-fn main() -> amethyst::Result<()> {
-    amethyst::start_logger(Default::default());
+use specs::prelude::*;
 
-    let app_root       = application_root_dir()?;
-    let resources      = app_root.join("resources");
-    let display_config = resources.join("display.ron");
-    let game_data      = GameDataBuilder::default()
-                           .with_bundle(TransformBundle::new())?
-                           .with_bundle(
-                               RenderingBundle::<DefaultBackend>::new()
-                                   // The RenderToWindow plugin provides all the scaffolding for opening a window and drawing on it
-                                   .with_plugin(
-                                       RenderToWindow::from_config_path(display_config)?
-                                           .with_clear([0.0, 0.0, 0.0, 1.0]),
-                                   )
-                                   // RenderFlat2D plugin is used to render entities with a `SpriteRender` component.
-                                   .with_plugin(RenderFlat2D::default()),
-                           )?;
+mod components;
+mod renderer;
+use crate::components::*;
 
-    let mut game = Application::new(resources, Asteroids, game_data)?;
+fn main() -> Result<(), String> {
+    let sdl    = sdl2::init()?;
+    let video  = sdl.video()?;
+    let window = video.window("Something", 640, 480)
+                      .opengl()
+                      .build().map_err(|e| e.to_string())?;
 
-    game.run();
+    let mut events  = sdl.event_pump()?;
+    let mut canvas  = window.into_canvas().build().map_err(|e| e.to_string())?;
+    let textures    = canvas.texture_creator();
+    let spritesheet = textures.load_texture(Path::new("resources/sprites.png"))?;
+
+    let mut game   = GameState { world: World::new() };
+
+    game.world.register::<Position>();
+    game.world.register::<Sprite>();
+    game.world.register::<Velocity>();
+    game.world.create_entity()
+              .with(Position { x: 320, y: 240})
+              .with(Velocity { x: 0,   y: 0  })
+              .with(Sprite {frame: Rect::new(0, 0, 56, 34)})
+              .build();
+
+    'running: loop {
+        for event in events.poll_iter() {
+            match event {
+                Event::Quit {..} | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
+                    break 'running
+                },
+                _ => {}
+            }
+        }
+        renderer::render(&mut canvas, game.world.system_data(), &spritesheet).unwrap();
+    }
 
     Ok(())
+}
+
+struct GameState {
+    world: World
 }
