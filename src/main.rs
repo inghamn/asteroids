@@ -31,7 +31,7 @@ fn main() -> Result<(), String> {
     game.world.register::<Sprite>();
     game.world.register::<Velocity>();
     game.world.create_entity()
-              .with(Position { x: 320, y: 240})
+              .with(Position { x: 320, y: 240, w: 34, h: 22 })
               .with(Velocity { x: 0,   y: 0  })
               .with(Sprite {frame: Rect::new(0, 0, 56, 34)})
               .build();

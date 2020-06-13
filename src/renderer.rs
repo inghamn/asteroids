@@ -18,8 +18,8 @@ pub fn render(canvas: &mut WindowCanvas, data: SystemData, spritesheet: &Texture
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
 
-    for (position, sprite) in (&data.0, &data.1).join() {
-        let frame = Rect::from_center(Point::new(position.x, position.y), 34, 21);
+    for (pos, sprite) in (&data.0, &data.1).join() {
+        let frame = Rect::from_center(Point::new(pos.x, pos.y), pos.w, pos.h);
         canvas.copy_ex(&spritesheet, Some(sprite.frame), Some(frame), 0.0, None, false, false)?;
     }
 
