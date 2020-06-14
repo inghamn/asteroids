@@ -8,6 +8,11 @@ use sdl2::render::{WindowCanvas, Texture};
 
 use specs::prelude::*;
 
+pub const DIRECTION_UP:    f64 = 270.0;
+pub const DIRECTION_DOWN:  f64 =  90.0;
+pub const DIRECTION_LEFT:  f64 = 180.0;
+pub const DIRECTION_RIGHT: f64 =   0.0;
+
 pub type SystemData<'a> = (
     ReadStorage<'a, Position>,
     ReadStorage<'a, Sprite>,
@@ -24,7 +29,7 @@ pub fn render(canvas: &mut WindowCanvas,
 
         for (pos, sprite) in (&data.0, &data.1).join() {
             let frame = Rect::from_center(Point::new(pos.x, pos.y), pos.w, pos.h);
-            b.copy_ex(&spritesheet, Some(sprite.frame), Some(frame), 0.0, None, false, false).unwrap();
+            b.copy_ex(&spritesheet, Some(sprite.frame), Some(frame), pos.dir, None, false, false).unwrap();
         }
     }).map_err(|e| e.to_string())?;
 

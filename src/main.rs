@@ -14,6 +14,9 @@ mod components;
 mod renderer;
 use crate::components::*;
 
+const ARENA_WIDTH:  u32 = 1024;
+const ARENA_HEIGHT: u32 = 768;
+
 fn main() -> Result<(), String> {
     let sdl    = sdl2::init()?;
     let video  = sdl.video()?;
@@ -28,7 +31,7 @@ fn main() -> Result<(), String> {
                             .map_err(|e| e.to_string())?;
     let textures    = canvas.texture_creator();
     let spritesheet = textures.load_texture(Path::new("resources/sprites.png"))?;
-    let mut buffer  = textures.create_texture_target(PixelFormatEnum::RGBA8888, 1024, 1024)
+    let mut buffer  = textures.create_texture_target(PixelFormatEnum::RGBA8888, ARENA_WIDTH, ARENA_HEIGHT)
                               .map_err(|e| e.to_string())?;
 
     let mut game   = GameState { world: World::new() };
@@ -37,7 +40,7 @@ fn main() -> Result<(), String> {
     game.world.register::<Sprite>();
     game.world.register::<Velocity>();
     game.world.create_entity()
-              .with(Position { x: 320, y: 240, w: 34, h: 22 })
+              .with(Position { x: 320, y: 240, w: 34, h: 22, dir: renderer::DIRECTION_RIGHT })
               .with(Velocity { x: 0,   y: 0  })
               .with(Sprite {frame: Rect::new(0, 0, 56, 34)})
               .build();
