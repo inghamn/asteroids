@@ -13,15 +13,23 @@ pub type SystemData<'a> = (
     ReadStorage<'a, Sprite>,
 );
 
-pub fn render(canvas: &mut WindowCanvas, data: SystemData, spritesheet: &Texture) -> Result<(), String>
+pub fn render(canvas: &mut WindowCanvas,
+              buffer: &mut Texture,
+              data: SystemData,
+              spritesheet: &Texture) -> Result<(), String>
 {
-    canvas.set_draw_color(Color::RGB(0, 0, 0));
-    canvas.clear();
+    canvas.with_texture_canvas(buffer, |b| {
+        b.set_draw_color(Color::RGB(0, 0, 0));
+        b.clear();
 
-    for (pos, sprite) in (&data.0, &data.1).join() {
-        let frame = Rect::from_center(Point::new(pos.x, pos.y), pos.w, pos.h);
-        canvas.copy_ex(&spritesheet, Some(sprite.frame), Some(frame), 0.0, None, false, false)?;
-    }
+        for (pos, sprite) in (&data.0, &data.1).join() {
+            let frame = Rect::from_center(Point::new(pos.x, pos.y), pos.w, pos.h);
+            b.copy_ex(&spritesheet, Some(sprite.frame), Some(frame), 0.0, None, false, false).unwrap();
+        }
+    }).map_err(|e| e.to_string())?;
+
+    let b = buffer.query();
+    canvas.copy_ex(&buffer, Rect::new(0, 0, b.width, b.height), canvas.viewport(), 0.0, None, false, false )?;
 
     canvas.present();
     Ok(())

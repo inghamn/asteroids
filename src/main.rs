@@ -4,6 +4,7 @@ use std::path::Path;
 use sdl2::event::Event;
 use sdl2::image::{LoadTexture};
 use sdl2::keyboard::Keycode;
+use sdl2::pixels::{PixelFormatEnum};
 use sdl2::rect::Rect;
 use sdl2::surface::Surface;
 
@@ -21,9 +22,14 @@ fn main() -> Result<(), String> {
                       .build().map_err(|e| e.to_string())?;
 
     let mut events  = sdl.event_pump()?;
-    let mut canvas  = window.into_canvas().build().map_err(|e| e.to_string())?;
+    let mut canvas  = window.into_canvas()
+                            .present_vsync()
+                            .build()
+                            .map_err(|e| e.to_string())?;
     let textures    = canvas.texture_creator();
     let spritesheet = textures.load_texture(Path::new("resources/sprites.png"))?;
+    let mut buffer  = textures.create_texture_target(PixelFormatEnum::RGBA8888, 1024, 1024)
+                              .map_err(|e| e.to_string())?;
 
     let mut game   = GameState { world: World::new() };
 
@@ -45,7 +51,7 @@ fn main() -> Result<(), String> {
                 _ => {}
             }
         }
-        renderer::render(&mut canvas, game.world.system_data(), &spritesheet).unwrap();
+        renderer::render(&mut canvas, &mut buffer, game.world.system_data(), &spritesheet).unwrap();
     }
 
     Ok(())
