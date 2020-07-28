@@ -32,6 +32,6 @@ pub fn update(commands: &Commands, ship: &mut Ship)
         ship.direction = (ship.direction - ROTATION_RATE) % FULL_CIRCLE;
     }
     if (commands.right) {
-        ship.direction = (ship.direction - ROTATION_RATE) % FULL_CIRCLE;
+        ship.direction = (ship.direction + ROTATION_RATE) % FULL_CIRCLE;
     }
 }

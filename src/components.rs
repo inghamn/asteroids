@@ -18,7 +18,7 @@ pub struct Ship {
     pub vy:  u8,
     pub direction: f32, // Radians
     pub status: u8,
-    pub shape:  Vec<(i16, i16)>,
+    pub shape:  Vec<(i8, i8)>,
     pub render: Vec<Point>
 }
 impl Ship {
@@ -32,12 +32,12 @@ impl Ship {
             status: STATUS_ACTIVE,
             // Definition for 1280x1024
             shape: vec![
-                (12i16,  6i16),
-                (12i16, 18i16),
-                ( 6i16, 24i16),
-                (42i16, 12i16),
-                ( 6i16,  0i16),
-                (12i16,  6i16)
+                (-1,  1),
+                (-1, -1),
+                (-2, -2),
+                ( 4,  0),
+                (-2,  2),
+                (-1,  1)
             ],
 
             // Last rendered shape values

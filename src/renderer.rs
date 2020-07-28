@@ -15,21 +15,21 @@ use sdl2::render::{WindowCanvas};
 
 pub fn render(canvas: &mut WindowCanvas, ship: &mut Ship) -> Result<(), String>
 {
-    let scale = 1.0f32 / 1.0f32;
-    let wo = 21.0f32;
-    let ho =  6.0f32;
+    let scale = 6.0f32;
+    let sinT  = ship.direction.sin();
+    let cosT  = ship.direction.cos();
 
     canvas.set_draw_color(Color::RGB(0, 0, 0));
     canvas.clear();
     canvas.set_draw_color(Color::RGB(255, 255, 255));
 
     for i in (0..ship.shape.len()) {
-        let x = (ship.x as f32 + ship.shape[i].0 as f32 - wo) * scale;
-        let y = (ship.y as f32 + ship.shape[i].1 as f32 - ho) * scale;
+        let x = (ship.shape[i].0 as f32 * scale * cosT) - (ship.shape[i].1 as f32 * scale * sinT);
+        let y = (ship.shape[i].1 as f32 * scale * cosT) + (ship.shape[i].0 as f32 * scale * sinT);
 
         ship.render[i] = Point::new(
-            x.round() as i32,
-            y.round() as i32
+            x.round() as i32 + ship.x as i32,
+            y.round() as i32 + ship.y as i32
         );
     }
     canvas.draw_lines(&ship.render[..]);
