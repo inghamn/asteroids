@@ -1,65 +1,69 @@
 extern crate sdl2;
-use std::path::Path;
 
 use sdl2::event::Event;
-use sdl2::image::{LoadTexture};
 use sdl2::keyboard::Keycode;
-use sdl2::pixels::{PixelFormatEnum};
-use sdl2::rect::Rect;
-use sdl2::surface::Surface;
 
-use specs::prelude::*;
+use std::time::Instant;
 
 mod components;
+mod inputs;
 mod renderer;
-use crate::components::*;
 
-const ARENA_WIDTH:  u32 = 1024;
-const ARENA_HEIGHT: u32 = 768;
+const ARENA_WIDTH:   u32 = 1280;
+const ARENA_HEIGHT:  u32 = 1024;
+const WINDOW_WIDTH:  u32 = 1280;
+const WINDOW_HEIGHT: u32 = 1024;
+
 
 fn main() -> Result<(), String> {
     let sdl    = sdl2::init()?;
     let video  = sdl.video()?;
-    let window = video.window("Something", 640, 480)
+    let window = video.window("Something", WINDOW_WIDTH, WINDOW_HEIGHT)
                       .opengl()
                       .build().map_err(|e| e.to_string())?;
-
     let mut events  = sdl.event_pump()?;
     let mut canvas  = window.into_canvas()
                             .present_vsync()
                             .build()
                             .map_err(|e| e.to_string())?;
-    let textures    = canvas.texture_creator();
-    let spritesheet = textures.load_texture(Path::new("resources/sprites.png"))?;
-    let mut buffer  = textures.create_texture_target(PixelFormatEnum::RGBA8888, ARENA_WIDTH, ARENA_HEIGHT)
-                              .map_err(|e| e.to_string())?;
+    let mut ship     = components::Ship::new();
+    let mut commands = inputs::Commands::new();
 
-    let mut game   = GameState { world: World::new() };
-
-    game.world.register::<Position>();
-    game.world.register::<Sprite>();
-    game.world.register::<Velocity>();
-    game.world.create_entity()
-              .with(Position { x: 320, y: 240, w: 34, h: 22, dir: renderer::DIRECTION_RIGHT })
-              .with(Velocity { x: 0,   y: 0  })
-              .with(Sprite {frame: Rect::new(0, 0, 56, 34)})
-              .build();
+    let mut previousTime = Instant::now();
+    let mut currentTime  = Instant::now();
+    let mut dt           = currentTime.duration_since(previousTime);
 
     'running: loop {
+        currentTime  = Instant::now();
+        dt           = currentTime.duration_since(previousTime);
+        previousTime = currentTime;
+
+        // Clear the momentary commands
+        commands.fire       = false;
+        commands.hyperspace = false;
+
         for event in events.poll_iter() {
             match event {
                 Event::Quit {..} | Event::KeyDown { keycode: Some(Keycode::Escape), .. } => {
                     break 'running
                 },
+                // Momentary commands
+                Event::KeyDown { keycode: Some(Keycode::LCtrl), .. } => { commands.fire       = true;  },
+                Event::KeyDown { keycode: Some(Keycode::Tab  ), .. } => { commands.hyperspace = true;  },
+
+                // Continuous commands
+                Event::KeyDown { keycode: Some(Keycode::Left ), .. } => { commands.left    = true;  },
+                Event::KeyDown { keycode: Some(Keycode::Right), .. } => { commands.right   = true;  },
+                Event::KeyDown { keycode: Some(Keycode::Space), .. } => { commands.thrust  = true;  },
+                Event::KeyUp   { keycode: Some(Keycode::Left ), .. } => { commands.left    = false; },
+                Event::KeyUp   { keycode: Some(Keycode::Right), .. } => { commands.right   = false; },
+                Event::KeyUp   { keycode: Some(Keycode::Space), .. } => { commands.thrust  = false; },
                 _ => {}
             }
         }
-        renderer::render(&mut canvas, &mut buffer, game.world.system_data(), &spritesheet).unwrap();
+        inputs::update(&commands, &mut ship);
+        renderer::render(&mut canvas, &mut ship).unwrap();
     }
-
     Ok(())
 }
 
-struct GameState {
-    world: World
-}

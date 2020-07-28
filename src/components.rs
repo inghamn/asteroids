@@ -1,23 +1,70 @@
-use specs::prelude::*;
-use sdl2::rect::Rect;
+use sdl2::rect::Point;
 
-pub struct Position {
-    pub   x: i32,
-    pub   y: i32,
-    pub   w: u32,
-    pub   h: u32,
-    pub dir: f64
+pub const STATUS_DEAD:   u8 = 0;
+pub const STATUS_ACTIVE: u8 = 1;
+
+pub struct Asteroid {
+    pub  x: i16,
+    pub  y: i16,
+    pub vx:  u8,
+    pub vy:  u8,
+    pub status: u8
 }
 
-pub struct Velocity {
-    pub x: i8,
-    pub y: i8
+pub struct Ship {
+    pub  x: i16,
+    pub  y: i16,
+    pub vx:  u8,
+    pub vy:  u8,
+    pub direction: f32, // Radians
+    pub status: u8,
+    pub shape:  Vec<(i16, i16)>,
+    pub render: Vec<Point>
+}
+impl Ship {
+    pub fn new() -> Ship {
+        Ship {
+            x: 320,
+            y: 240,
+            vx: 0,
+            vy: 0,
+            direction: 0.0,
+            status: STATUS_ACTIVE,
+            // Definition for 1280x1024
+            shape: vec![
+                (12i16,  6i16),
+                (12i16, 18i16),
+                ( 6i16, 24i16),
+                (42i16, 12i16),
+                ( 6i16,  0i16),
+                (12i16,  6i16)
+            ],
+
+            // Last rendered shape values
+            render: vec![
+                Point::new(18,  9),
+                Point::new(18, 27),
+                Point::new( 9, 36),
+                Point::new(63, 18),
+                Point::new( 9,  0),
+                Point::new(18,  9)
+            ]
+        }
+    }
 }
 
-pub struct Sprite {
-    pub frame: Rect
+pub struct Shot {
+    pub  x: i16,
+    pub  y: i16,
+    pub vx:  u8,
+    pub vy:  u8,
+    pub status: u8
 }
 
-impl Component for Position { type Storage = VecStorage<Self>; }
-impl Component for Velocity { type Storage = VecStorage<Self>; }
-impl Component for Sprite   { type Storage = VecStorage<Self>; }
+pub struct Saucer {
+    pub  x: i16,
+    pub  y: i16,
+    pub vx:  u8,
+    pub vy:  u8,
+    pub status: u8
+}

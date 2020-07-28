@@ -1,40 +1,38 @@
 extern crate sdl2;
 use crate::components::*;
 
-use sdl2::image::LoadTexture;
 use sdl2::pixels::Color;
-use sdl2::rect::*;
-use sdl2::render::{WindowCanvas, Texture};
+use sdl2::rect::Point;
+use sdl2::render::{WindowCanvas};
 
-use specs::prelude::*;
+/*
+                 n   d  wo ho
+     320 x  240  1 / 3
+     640 x  480  1 / 2
+    1280 x 1024  1 / 1  21  6
+    1920 x 1080  3 / 2
+*/
 
-pub const DIRECTION_UP:    f64 = 270.0;
-pub const DIRECTION_DOWN:  f64 =  90.0;
-pub const DIRECTION_LEFT:  f64 = 180.0;
-pub const DIRECTION_RIGHT: f64 =   0.0;
-
-pub type SystemData<'a> = (
-    ReadStorage<'a, Position>,
-    ReadStorage<'a, Sprite>,
-);
-
-pub fn render(canvas: &mut WindowCanvas,
-              buffer: &mut Texture,
-              data: SystemData,
-              spritesheet: &Texture) -> Result<(), String>
+pub fn render(canvas: &mut WindowCanvas, ship: &mut Ship) -> Result<(), String>
 {
-    canvas.with_texture_canvas(buffer, |b| {
-        b.set_draw_color(Color::RGB(0, 0, 0));
-        b.clear();
+    let scale = 1.0f32 / 1.0f32;
+    let wo = 21.0f32;
+    let ho =  6.0f32;
 
-        for (pos, sprite) in (&data.0, &data.1).join() {
-            let frame = Rect::from_center(Point::new(pos.x, pos.y), pos.w, pos.h);
-            b.copy_ex(&spritesheet, Some(sprite.frame), Some(frame), pos.dir, None, false, false).unwrap();
-        }
-    }).map_err(|e| e.to_string())?;
+    canvas.set_draw_color(Color::RGB(0, 0, 0));
+    canvas.clear();
+    canvas.set_draw_color(Color::RGB(255, 255, 255));
 
-    let b = buffer.query();
-    canvas.copy_ex(&buffer, Rect::new(0, 0, b.width, b.height), canvas.viewport(), 0.0, None, false, false )?;
+    for i in (0..ship.shape.len()) {
+        let x = (ship.x as f32 + ship.shape[i].0 as f32 - wo) * scale;
+        let y = (ship.y as f32 + ship.shape[i].1 as f32 - ho) * scale;
+
+        ship.render[i] = Point::new(
+            x.round() as i32,
+            y.round() as i32
+        );
+    }
+    canvas.draw_lines(&ship.render[..]);
 
     canvas.present();
     Ok(())
