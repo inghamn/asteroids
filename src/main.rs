@@ -61,7 +61,7 @@ fn main() -> Result<(), String> {
                 _ => {}
             }
         }
-        inputs::update(&commands, &mut ship);
+        inputs::update(&commands, dt.as_millis() as f32, &mut ship);
         renderer::render(&mut canvas, &mut ship).unwrap();
     }
     Ok(())
