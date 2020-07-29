@@ -29,14 +29,14 @@ fn main() -> Result<(), String> {
     let mut ship     = components::Ship::new();
     let mut commands = inputs::Commands::new();
 
-    let mut previousTime = Instant::now();
-    let mut currentTime  = Instant::now();
-    let mut dt           = currentTime.duration_since(previousTime);
+    let mut prev_time = Instant::now();
+    let mut cur_time  = Instant::now();
+    let mut dt        = cur_time.duration_since(prev_time);
 
     'running: loop {
-        currentTime  = Instant::now();
-        dt           = currentTime.duration_since(previousTime);
-        previousTime = currentTime;
+        cur_time  = Instant::now();
+        dt        = cur_time.duration_since(prev_time);
+        prev_time = cur_time;
 
         // Clear the momentary commands
         commands.fire       = false;
