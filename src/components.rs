@@ -22,13 +22,13 @@ pub struct Ship {
     pub render: Vec<Point>
 }
 impl Ship {
-    pub fn new() -> Ship {
+    pub fn new(x: f32, y: f32, d: f32) -> Ship {
         Ship {
-            x: 320.0,
-            y: 240.0,
+            x: x,
+            y: y,
             vx:  0.0,
             vy:  0.0,
-            direction: 0.0,
+            direction: d,
             status: STATUS_ACTIVE,
             // Definition for 1280x1024
             shape: vec![
