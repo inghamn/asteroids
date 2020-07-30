@@ -4,7 +4,7 @@ use crate::components::*;
 
 const TAU:           f32 = PI * 2.0;
 const ROTATION_RATE: f32 = 0.008; // Radians per ms
-const THRUST_ACCEL:  f32 = 0.5; // Arena units per ms
+const THRUST_ACCEL:  f32 = 0.05; // Arena units per ms
 const SHOT_SPEED:    f32 = 0.5; // Arena units per ms
 
 pub struct Commands {
@@ -26,10 +26,15 @@ impl Commands {
     }
 }
 
-pub fn update(commands: &Commands, dt: f32, ship: &mut Ship)
+pub fn update(dt: f32, commands: &Commands, ship: &mut Ship)
 {
     let t = ROTATION_RATE * dt;
 
     if (commands.left ) { ship.direction = (ship.direction - t) % TAU; }
     if (commands.right) { ship.direction = (ship.direction + t) % TAU; }
+
+    if (commands.thrust) {
+        ship.vx += ship.direction.cos() * THRUST_ACCEL;
+        ship.vy += ship.direction.sin() * THRUST_ACCEL;
+    }
 }

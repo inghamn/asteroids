@@ -1,16 +1,7 @@
-use specs::prelude::*;
+use crate::components::*;
 
-struct Physics {}
-
-impl<'a> System<'a> for Physics
+pub fn update(dt: f32, ship: &mut Ship)
 {
-    type SystemData = (ReadStorage<'a, Velocity>, WriteStorage<'a, Position>);
-
-    fn run(&mut self, (velocity, mut position): Self::SystemData)
-    {
-        for (v, p) in (&velocity, &mut position).join() {
-            p.x += v.x;
-            p.y += v.y;
-        }
-    }
+    ship.x += ship.vx;
+    ship.y += ship.vy;
 }

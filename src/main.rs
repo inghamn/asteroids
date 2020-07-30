@@ -7,6 +7,7 @@ use std::time::Instant;
 
 mod components;
 mod inputs;
+mod physics;
 mod renderer;
 
 const ARENA_WIDTH:   u32 = 1280;
@@ -31,11 +32,11 @@ fn main() -> Result<(), String> {
 
     let mut prev_time = Instant::now();
     let mut cur_time  = Instant::now();
-    let mut dt        = cur_time.duration_since(prev_time);
+    let mut dt        = cur_time.duration_since(prev_time).as_millis() as f32;
 
     'running: loop {
         cur_time  = Instant::now();
-        dt        = cur_time.duration_since(prev_time);
+        dt        = cur_time.duration_since(prev_time).as_millis() as f32;
         prev_time = cur_time;
 
         // Clear the momentary commands
@@ -61,9 +62,9 @@ fn main() -> Result<(), String> {
                 _ => {}
             }
         }
-        inputs::update(&commands, dt.as_millis() as f32, &mut ship);
+        inputs::update(dt, &commands, &mut ship);
+        physics::update(dt, &mut ship);
         renderer::render(&mut canvas, &mut ship).unwrap();
     }
     Ok(())
 }
-

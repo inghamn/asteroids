@@ -12,10 +12,10 @@ pub struct Asteroid {
 }
 
 pub struct Ship {
-    pub  x: i16,
-    pub  y: i16,
-    pub vx:  u8,
-    pub vy:  u8,
+    pub  x: f32,
+    pub  y: f32,
+    pub vx: f32,
+    pub vy: f32,
     pub direction: f32, // Radians
     pub status: u8,
     pub shape:  Vec<(i8, i8)>,
@@ -24,10 +24,10 @@ pub struct Ship {
 impl Ship {
     pub fn new() -> Ship {
         Ship {
-            x: 320,
-            y: 240,
-            vx: 0,
-            vy: 0,
+            x: 320.0,
+            y: 240.0,
+            vx:  0.0,
+            vy:  0.0,
             direction: 0.0,
             status: STATUS_ACTIVE,
             // Definition for 1280x1024

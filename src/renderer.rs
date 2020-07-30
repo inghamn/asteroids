@@ -28,8 +28,8 @@ pub fn render(canvas: &mut WindowCanvas, ship: &mut Ship) -> Result<(), String>
         let y = (ship.shape[i].1 as f32 * scale * cos_t) + (ship.shape[i].0 as f32 * scale * sin_t);
 
         ship.render[i] = Point::new(
-            x.round() as i32 + ship.x as i32,
-            y.round() as i32 + ship.y as i32
+            x.round() as i32 + ship.x.round() as i32,
+            y.round() as i32 + ship.y.round() as i32
         );
     }
     let _ = canvas.draw_lines(&ship.render[..]);
