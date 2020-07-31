@@ -11,10 +11,10 @@ mod inputs;
 mod physics;
 mod renderer;
 
-const ARENA_WIDTH:   u32 = 1280;
-const ARENA_HEIGHT:  u32 = 1024;
-const WINDOW_WIDTH:  u32 = 640;
-const WINDOW_HEIGHT: u32 = 480;
+pub const ARENA_WIDTH:   f32 = 1280.0;
+pub const ARENA_HEIGHT:  f32 = 1024.0;
+pub const WINDOW_WIDTH:  u32 = 640;
+pub const WINDOW_HEIGHT: u32 = 480;
 
 fn main() -> Result<(), String> {
     let sdl    = sdl2::init()?;
@@ -27,7 +27,7 @@ fn main() -> Result<(), String> {
                             .present_vsync()
                             .build()
                             .map_err(|e| e.to_string())?;
-    let mut ship     = components::Ship::new(ARENA_WIDTH as f32 / 2.0, ARENA_HEIGHT as f32 / 2.0, -PI / 2.0);
+    let mut ship     = components::Ship::new(ARENA_WIDTH / 2.0, ARENA_HEIGHT / 2.0, -PI / 2.0);
     let mut commands = inputs::Commands::new();
 
     let mut prev_time = Instant::now();
