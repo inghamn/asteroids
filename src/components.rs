@@ -18,8 +18,7 @@ pub struct Ship {
     pub vy: f32,
     pub direction: f32, // Radians
     pub status: u8,
-    pub shape:  Vec<(i8, i8)>,
-    pub render: Vec<Point>
+    pub shape:  Vec<(i8, i8)>
 }
 impl Ship {
     pub fn new(x: f32, y: f32, d: f32) -> Ship {
@@ -38,16 +37,6 @@ impl Ship {
                 ( 4,  0),
                 (-2,  2),
                 (-1,  1)
-            ],
-
-            // Last rendered shape values
-            render: vec![
-                Point::new(18,  9),
-                Point::new(18, 27),
-                Point::new( 9, 36),
-                Point::new(63, 18),
-                Point::new( 9,  0),
-                Point::new(18,  9)
             ]
         }
     }

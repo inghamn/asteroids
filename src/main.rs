@@ -12,7 +12,7 @@ mod physics;
 mod renderer;
 
 pub const ARENA_WIDTH:   f32 = 1280.0;
-pub const ARENA_HEIGHT:  f32 = 1024.0;
+pub const ARENA_HEIGHT:  f32 =  960.0;
 pub const WINDOW_WIDTH:  u32 = 640;
 pub const WINDOW_HEIGHT: u32 = 480;
 
