@@ -1,5 +1,5 @@
 extern crate sdl2;
-use crate::components::*;
+use crate::components::ship::Ship;
 
 use sdl2::pixels::Color;
 use sdl2::rect::Point;
@@ -34,7 +34,7 @@ fn draw_ship(canvas: &mut WindowCanvas, ship: &Ship)
     let _ = canvas.draw_lines(&render[..]);
 
     let ghost = wrapped_ghost(ship);
-    if (ghost.is_some()) {
+    if ghost.is_some() {
         let render = render_ship(ship, ghost.unwrap());
         let _ = canvas.draw_lines(&render[..]);
     }
@@ -46,18 +46,18 @@ fn wrapped_ghost(ship: &Ship) -> Option<(f32, f32)>
     let mut ghost_y: Option<f32> = None;
 
     let border = 2.0 * SHAPE_SCALE;
-    if (ship.x <= border) { ghost_x = Some(ship.x + crate::ARENA_WIDTH ); }
-    if (ship.y <= border) { ghost_y = Some(ship.y + crate::ARENA_HEIGHT); }
-    if (ship.x >= crate::ARENA_WIDTH  - border) { ghost_x = Some(ship.x - crate::ARENA_WIDTH ); }
-    if (ship.y >= crate::ARENA_HEIGHT - border) { ghost_y = Some(ship.y - crate::ARENA_HEIGHT); }
+    if ship.x <= border { ghost_x = Some(ship.x + crate::ARENA_WIDTH ); }
+    if ship.y <= border { ghost_y = Some(ship.y + crate::ARENA_HEIGHT); }
+    if ship.x >= crate::ARENA_WIDTH  - border { ghost_x = Some(ship.x - crate::ARENA_WIDTH ); }
+    if ship.y >= crate::ARENA_HEIGHT - border { ghost_y = Some(ship.y - crate::ARENA_HEIGHT); }
 
-    if (ghost_x.is_some() && ghost_y.is_none()) {
+    if ghost_x.is_some() && ghost_y.is_none() {
         ghost_y = Some(ship.y);
     }
-    if (ghost_y.is_some() && ghost_x.is_none()) {
+    if ghost_y.is_some() && ghost_x.is_none() {
         ghost_x = Some(ship.x);
     }
-    if (ghost_x.is_some()) {
+    if ghost_x.is_some() {
         return Some((ghost_x.unwrap(), ghost_y.unwrap()));
     }
     None
@@ -69,7 +69,7 @@ fn render_ship(ship: &Ship, location: (f32, f32)) -> Vec<Point>
     let cos_t  = ship.direction.cos() * SHAPE_SCALE;
     let mut render = vec![Point::new(0, 0); ship.shape.len()];
 
-    for i in (0..ship.shape.len()) {
+    for i in 0..ship.shape.len() {
         let x = (ship.shape[i].0 as f32 * cos_t) - (ship.shape[i].1 as f32 * sin_t);
         let y = (ship.shape[i].1 as f32 * cos_t) + (ship.shape[i].0 as f32 * sin_t);
 

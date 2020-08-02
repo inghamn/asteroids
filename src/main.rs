@@ -7,9 +7,10 @@ use std::time::Instant;
 use std::f32::consts::{PI};
 
 mod components;
-mod inputs;
 mod physics;
 mod renderer;
+
+use components::ship::{Ship,Commands};
 
 pub const ARENA_WIDTH:   f32 = 1280.0;
 pub const ARENA_HEIGHT:  f32 =  960.0;
@@ -27,8 +28,8 @@ fn main() -> Result<(), String> {
                             .present_vsync()
                             .build()
                             .map_err(|e| e.to_string())?;
-    let mut ship     = components::Ship::new(ARENA_WIDTH / 2.0, ARENA_HEIGHT / 2.0, -PI / 2.0);
-    let mut commands = inputs::Commands::new();
+    let mut ship     = Ship::new(ARENA_WIDTH / 2.0, ARENA_HEIGHT / 2.0, -PI / 2.0);
+    let mut commands = Commands::new();
 
     let mut prev_time = Instant::now();
     let mut cur_time  = Instant::now();
@@ -62,7 +63,7 @@ fn main() -> Result<(), String> {
                 _ => {}
             }
         }
-        inputs::update(dt, &commands, &mut ship);
+        ship.update(dt, &commands);
         physics::update(dt, &mut ship);
         renderer::render(&mut canvas, &mut ship).unwrap();
     }

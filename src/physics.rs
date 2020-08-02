@@ -1,4 +1,4 @@
-use crate::components::*;
+use crate::components::ship::Ship;
 
 pub fn update(dt: f32, ship: &mut Ship)
 {
