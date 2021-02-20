@@ -1,5 +1,5 @@
 extern crate sdl2;
-use crate::components::ship::Ship;
+use crate::entities::ship::Ship;
 
 use sdl2::pixels::Color;
 use sdl2::rect::Point;
@@ -66,8 +66,8 @@ fn wrapped_ghost(ship: &Ship) -> Option<(f32, f32)>
 
 fn render_ship(ship: &Ship, location: (f32, f32)) -> Vec<Point>
 {
-    let sin_t  = ship.physics.direction.sin() * SHAPE_SCALE;
-    let cos_t  = ship.physics.direction.cos() * SHAPE_SCALE;
+    let sin_t  = ship.direction.sin() * SHAPE_SCALE;
+    let cos_t  = ship.direction.cos() * SHAPE_SCALE;
     let mut render = vec![Point::new(0, 0); ship.shape.len()];
 
     for i in 0..ship.shape.len() {

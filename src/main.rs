@@ -7,10 +7,11 @@ use std::time::Instant;
 use std::f32::consts::{PI};
 
 mod components;
-mod physics;
+mod entities;
 mod renderer;
 
-use components::ship::{Ship,Commands};
+use components::physics;
+use entities::ship::{Ship,Commands};
 
 pub const ARENA_WIDTH:   f32 = 1024.0;
 pub const ARENA_HEIGHT:  f32 =  768.0;
@@ -64,7 +65,7 @@ fn main() -> Result<(), String> {
             }
         }
         ship.update(dt, &commands);
-        physics::update(dt, &mut ship);
+        physics::update(dt, &mut ship.physics);
         renderer::render(&mut canvas, &mut ship).unwrap();
     }
     Ok(())

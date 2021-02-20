@@ -1,6 +1,6 @@
 use std::f32::consts::{PI};
-use crate::components::bullet::*;
-use crate::components::Physics;
+use crate::entities::bullet::*;
+use crate::components::physics::Physics;
 
 const TAU:           f32 = PI * 2.0;
 const ROTATION_RATE: f32 = 0.008; // Radians per ms
@@ -9,6 +9,7 @@ const MAX_BULLETS: usize = 4;
 
 pub struct Ship {
     pub physics: Physics,
+    pub direction: f32, // Radians
     pub status:    u8,
     pub shape:     Vec<(i8, i8)>,
     pub radius:    u8,
@@ -21,9 +22,9 @@ impl Ship {
                 x: x,
                 y: y,
                 vx:  0.0,
-                vy:  0.0,
-                direction: d
+                vy:  0.0
             },
+            direction: d,
             status: super::STATUS_ACTIVE,
             // Definition for 320x240
             shape: vec![
@@ -46,14 +47,14 @@ impl Ship {
     {
         let t = ROTATION_RATE * dt;
 
-        if commands.left  { self.physics.direction = (self.physics.direction - t) % TAU; }
-        if commands.right { self.physics.direction = (self.physics.direction + t) % TAU; }
+        if commands.left  { self.direction = (self.direction - t) % TAU; }
+        if commands.right { self.direction = (self.direction + t) % TAU; }
 
         if commands.fire && self.bullets.len() <= MAX_BULLETS { self.bullets.push(self.fire()); }
 
         if commands.thrust {
-            self.physics.vx += self.physics.direction.cos() * THRUST_ACCEL;
-            self.physics.vy += self.physics.direction.sin() * THRUST_ACCEL;
+            self.physics.vx += self.direction.cos() * THRUST_ACCEL;
+            self.physics.vy += self.direction.sin() * THRUST_ACCEL;
         }
     }
 
@@ -62,8 +63,8 @@ impl Ship {
         Bullet {
             x:   self.physics.x,
             y:   self.physics.y,
-            vx: (self.physics.direction.tan() / self.physics.y),
-            vy: (self.physics.direction.tan() * self.physics.x),
+            vx: (self.direction.tan() / self.physics.y),
+            vy: (self.direction.tan() * self.physics.x),
             status: super::STATUS_ACTIVE,
             timer: BULLET_DURATION
         }
