@@ -5,4 +5,3 @@ pub struct Asteroid {
     pub vy:  u8,
     pub status: u8
 }
-

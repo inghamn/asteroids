@@ -1,10 +1,11 @@
-const SHOT_SPEED:    f32 = 7.0;   // Arena units per ms
-const SHOT_DURATION: u16 = 288;   // ms
+pub const BULLET_SPEED:    f32 = 7.0;   // Arena units per ms
+pub const BULLET_DURATION: u16 = 288;   // ms
 
 pub struct Bullet {
-    pub  x: i16,
-    pub  y: i16,
-    pub vx:  u8,
-    pub vy:  u8,
-    pub status: u8
+    pub  x: f32,
+    pub  y: f32,
+    pub vx: f32,
+    pub vy: f32,
+    pub status: u8,
+    pub timer:  u16
 }
