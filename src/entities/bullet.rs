@@ -1,15 +1,15 @@
 use crate::components::physics::Physics;
 use crate::components::renderable::Renderable;
 
-pub const BULLET_SPEED:    f32 = 0.5;   // Arena units per ms
-pub const BULLET_DURATION: u16 = 288;   // ms
+pub const BULLET_SPEED:    f32 = 0.75;   // Arena units per ms
+pub const BULLET_DURATION: i16 = 800;   // ms
 
 
 pub struct Bullet {
     pub physics:    Physics,
     pub renderable: Renderable,
     pub status: u8,
-    pub timer:  u16
+    pub timer:  i16
 }
 impl Bullet
 {

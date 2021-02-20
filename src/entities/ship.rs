@@ -51,7 +51,7 @@ impl Ship {
         if commands.left  { self.renderable.direction = (self.renderable.direction - t) % TAU; }
         if commands.right { self.renderable.direction = (self.renderable.direction + t) % TAU; }
 
-        if commands.fire && self.bullets.len() <= MAX_BULLETS {
+        if commands.fire && self.bullets.len() < MAX_BULLETS {
             self.bullets.push(Bullet::new(self.physics.x, self.physics.y, self.renderable.direction));
         }
 
@@ -59,6 +59,9 @@ impl Ship {
             self.physics.vx += self.renderable.direction.cos() * THRUST_ACCEL * dt;
             self.physics.vy += self.renderable.direction.sin() * THRUST_ACCEL * dt;
         }
+
+        for b in &mut self.bullets { b.timer -= dt.floor() as i16; }
+        self.bullets.retain(|b| b.timer > 0);
     }
 }
 

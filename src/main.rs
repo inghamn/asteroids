@@ -51,7 +51,7 @@ fn main() -> Result<(), String> {
                     break 'running
                 },
                 // Momentary commands
-                Event::KeyDown { keycode: Some(Keycode::LCtrl), .. } => { commands.fire       = true;  println!("Fire"); },
+                Event::KeyDown { keycode: Some(Keycode::LCtrl), .. } => { commands.fire       = true;  },
                 Event::KeyDown { keycode: Some(Keycode::Tab  ), .. } => { commands.hyperspace = true;  },
 
                 // Continuous commands
