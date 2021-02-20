@@ -51,7 +51,7 @@ fn main() -> Result<(), String> {
                     break 'running
                 },
                 // Momentary commands
-                Event::KeyDown { keycode: Some(Keycode::LCtrl), .. } => { commands.fire       = true;  },
+                Event::KeyDown { keycode: Some(Keycode::LCtrl), .. } => { commands.fire       = true;  println!("Fire"); },
                 Event::KeyDown { keycode: Some(Keycode::Tab  ), .. } => { commands.hyperspace = true;  },
 
                 // Continuous commands
@@ -66,6 +66,9 @@ fn main() -> Result<(), String> {
         }
         ship.update(dt, &commands);
         physics::update(dt, &mut ship.physics);
+        for b in &mut ship.bullets {
+            physics::update(dt, &mut b.physics);
+        }
         renderer::render(&mut canvas, &mut ship).unwrap();
     }
     Ok(())

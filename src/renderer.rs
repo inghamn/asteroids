@@ -14,6 +14,9 @@ pub fn render(canvas: &mut WindowCanvas, ship: &Ship) -> Result<(), String>
 
 
     draw_renderable(canvas, &ship.renderable, ship.physics.x, ship.physics.y);
+    for b in ship.bullets.iter() {
+        draw_renderable(canvas, &b.renderable, b.physics.x, b.physics.y);
+    }
 
     canvas.present();
     Ok(())

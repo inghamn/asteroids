@@ -27,11 +27,20 @@ pub fn draw_renderable(canvas: &mut WindowCanvas, entity: &Renderable, x: f32, y
 {
     let polygon = vertices_screen(entity, (x, y));
     let ghost   = wrapped_ghost(entity, x, y);
-    let _       = canvas.draw_lines(&polygon[..]);
+    draw_polygon(canvas, polygon);
 
     if ghost.is_some() {
         let polygon = vertices_screen(entity, ghost.unwrap());
-        let _       = canvas.draw_lines(&polygon[..]);
+        draw_polygon(canvas, polygon);
+    }
+}
+
+fn draw_polygon(canvas: &mut WindowCanvas, polygon: Vec<Point>)
+{
+    match polygon.len() {
+        1 => { let _ = canvas.draw_point(polygon[0]); },
+        0 => { },
+        _ => { let _ = canvas.draw_lines(&polygon[..]); }
     }
 }
 
