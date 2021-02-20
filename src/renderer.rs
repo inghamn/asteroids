@@ -3,7 +3,6 @@ use crate::components::renderable::*;
 use crate::entities::ship::Ship;
 
 use sdl2::pixels::Color;
-use sdl2::rect::Point;
 use sdl2::render::{WindowCanvas};
 
 pub fn render(canvas: &mut WindowCanvas, ship: &Ship) -> Result<(), String>

@@ -7,16 +7,16 @@ pub struct Physics {
 
 pub fn update(dt: f32, physics: &mut Physics)
 {
-    physics.x = position_wrapped_horizontal(physics.x, physics.vx);
-    physics.y = position_wrapped_vertical  (physics.y, physics.vy);
+    physics.x = position_wrapped_horizontal(physics.x, physics.vx, dt);
+    physics.y = position_wrapped_vertical  (physics.y, physics.vy, dt);
 }
 
-fn position_wrapped_horizontal(x: f32, vx: f32) -> f32
+fn position_wrapped_horizontal(x: f32, vx: f32, dt: f32) -> f32
 {
-    (x + vx + crate::ARENA_WIDTH) % crate::ARENA_WIDTH
+    (x + (vx * dt) + crate::ARENA_WIDTH) % crate::ARENA_WIDTH
 }
 
-fn position_wrapped_vertical(y: f32, vy: f32) -> f32
+fn position_wrapped_vertical(y: f32, vy: f32, dt: f32) -> f32
 {
-    (y + vy + crate::ARENA_HEIGHT) % crate::ARENA_HEIGHT
+    (y + (vy * dt) + crate::ARENA_HEIGHT) % crate::ARENA_HEIGHT
 }
