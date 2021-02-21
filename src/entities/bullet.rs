@@ -4,16 +4,17 @@ use crate::components::renderable::Renderable;
 pub const BULLET_SPEED:    f32 = 0.75;   // Arena units per ms
 pub const BULLET_DURATION: i16 = 800;   // ms
 
+static BULLET_SHAPE: [(i8, i8); 1] = [(0,0)];
 
-pub struct Bullet {
+pub struct Bullet<'a> {
     pub physics:    Physics,
-    pub renderable: Renderable,
+    pub renderable: Renderable<'a>,
     pub status: u8,
     pub timer:  i16
 }
-impl Bullet
+impl<'a> Bullet<'a>
 {
-    pub fn new(x: f32, y: f32, direction: f32) -> Bullet
+    pub fn new(x: f32, y: f32, direction: f32) -> Bullet<'a>
     {
         Bullet {
             physics: Physics {
@@ -23,7 +24,7 @@ impl Bullet
                 vy: direction.sin() * BULLET_SPEED
             },
             renderable: Renderable {
-                shape: vec![(0, 0)],
+                shape:  &BULLET_SHAPE,
                 direction: 0.0,
                 radius: 1
             },

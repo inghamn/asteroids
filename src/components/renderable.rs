@@ -12,9 +12,9 @@ use sdl2::render::{WindowCanvas};
 const SHAPE_SCALE: f32 = 4.0;
 const COORD_SCALE: f32 = 1.0; // Ration of arena size to window size
 
-pub struct Renderable {
+pub struct Renderable<'a> {
     pub direction: f32, // Radians
-    pub shape:     Vec<(i8, i8)>,
+    pub shape: &'a [(i8, i8)],
     pub radius:    u8
 }
 

@@ -8,14 +8,30 @@ const ROTATION_RATE: f32 = 0.008;   // Radians per ms
 const THRUST_ACCEL:  f32 = 0.0005;  // Arena units / ms / ms button held
 const MAX_BULLETS: usize = 4;
 
-pub struct Ship {
+// Definition for 320x240
+static FREEFALL: [(i8, i8); 6] = [(-1,  1),
+                                  (-1, -1),
+                                  (-2, -2),
+                                  ( 4,  0),
+                                  (-2,  2),
+                                  (-1,  1)];
+static THRUST:   [(i8, i8); 8] = [(-1,  1),
+                                  (-1, -1),
+                                  (-2, -2),
+                                  ( 4,  0),
+                                  (-2,  2),
+                                  (-1,  1),
+                                  (-3,  0),
+                                  (-1, -1)];
+
+pub struct Ship<'a> {
     pub physics:    Physics,
-    pub renderable: Renderable,
+    pub renderable: Renderable<'a>,
     pub status:    u8,
-    pub bullets:   Vec<Bullet>
+    pub bullets:   Vec<Bullet<'a>>
 }
-impl Ship {
-    pub fn new(x: f32, y: f32, d: f32) -> Ship {
+impl<'a> Ship<'a> {
+    pub fn new(x: f32, y: f32, d: f32) -> Ship<'a> {
         Ship {
             physics: Physics {
                 x: x,
@@ -24,15 +40,7 @@ impl Ship {
                 vy:  0.0
             },
             renderable: Renderable {
-                // Definition for 320x240
-                shape: vec![
-                    (-1,  1),
-                    (-1, -1),
-                    (-2, -2),
-                    ( 4,  0),
-                    (-2,  2),
-                    (-1,  1)
-                ],
+                shape:  &FREEFALL,
                 radius: 4,
                 direction: d
             },
@@ -58,7 +66,10 @@ impl Ship {
         if commands.thrust {
             self.physics.vx += self.renderable.direction.cos() * THRUST_ACCEL * dt;
             self.physics.vy += self.renderable.direction.sin() * THRUST_ACCEL * dt;
+            self.renderable.shape = &THRUST;
         }
+
+        if commands.thrust_stop { self.renderable.shape = &FREEFALL; }
 
         for b in &mut self.bullets { b.timer -= dt.floor() as i16; }
         self.bullets.retain(|b| b.timer > 0);
@@ -66,20 +77,22 @@ impl Ship {
 }
 
 pub struct Commands {
-    pub left:       bool,
-    pub right:      bool,
-    pub thrust:     bool,
-    pub fire:       bool,
-    pub hyperspace: bool
+    pub left:        bool,
+    pub right:       bool,
+    pub thrust:      bool,
+    pub fire:        bool,
+    pub hyperspace:  bool,
+    pub thrust_stop: bool
 }
 impl Commands {
     pub fn new() -> Commands {
         Commands {
-            left:       false,
-            right:      false,
-            thrust:     false,
-            fire:       false,
-            hyperspace: false
+            left:        false,
+            right:       false,
+            thrust:      false,
+            fire:        false,
+            hyperspace:  false,
+            thrust_stop: false
         }
     }
 }

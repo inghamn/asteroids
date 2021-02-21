@@ -42,8 +42,9 @@ fn main() -> Result<(), String> {
         prev_time = cur_time;
 
         // Clear the momentary commands
-        commands.fire       = false;
-        commands.hyperspace = false;
+        commands.fire        = false;
+        commands.hyperspace  = false;
+        commands.thrust_stop = false;
 
         for event in events.poll_iter() {
             match event {
@@ -60,7 +61,7 @@ fn main() -> Result<(), String> {
                 Event::KeyDown { keycode: Some(Keycode::Space), .. } => { commands.thrust  = true;  },
                 Event::KeyUp   { keycode: Some(Keycode::Left ), .. } => { commands.left    = false; },
                 Event::KeyUp   { keycode: Some(Keycode::Right), .. } => { commands.right   = false; },
-                Event::KeyUp   { keycode: Some(Keycode::Space), .. } => { commands.thrust  = false; },
+                Event::KeyUp   { keycode: Some(Keycode::Space), .. } => { commands.thrust  = false; commands.thrust_stop = true; },
                 _ => {}
             }
         }
