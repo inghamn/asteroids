@@ -1,9 +1,7 @@
-use std::f32::consts::{PI};
 use crate::entities::bullet::*;
 use crate::components::physics::Physics;
 use crate::components::renderable::Renderable;
 
-const TAU:           f32 = PI * 2.0;
 const ROTATION_RATE: f32 = 0.008;   // Radians per ms
 const THRUST_ACCEL:  f32 = 0.0005;  // Arena units / ms / ms button held
 const MAX_BULLETS: usize = 4;
@@ -56,8 +54,8 @@ impl<'a> Ship<'a> {
     {
         let t = ROTATION_RATE * dt;
 
-        if commands.left  { self.renderable.direction = (self.renderable.direction - t) % TAU; }
-        if commands.right { self.renderable.direction = (self.renderable.direction + t) % TAU; }
+        if commands.left  { self.renderable.direction = (self.renderable.direction - t) % crate::TAU; }
+        if commands.right { self.renderable.direction = (self.renderable.direction + t) % crate::TAU; }
 
         if commands.fire && self.bullets.len() < MAX_BULLETS {
             self.bullets.push(Bullet::new(self.physics.x, self.physics.y, self.renderable.direction));

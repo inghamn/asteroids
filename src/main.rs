@@ -11,8 +11,10 @@ mod entities;
 mod renderer;
 
 use components::physics;
+use entities::asteroid::Asteroid;
 use entities::ship::{Ship,Commands};
 
+pub const TAU:           f32 = PI * 2.0;
 pub const ARENA_WIDTH:   f32 = 1024.0;
 pub const ARENA_HEIGHT:  f32 =  768.0;
 pub const WINDOW_WIDTH:  u32 = 1024;
@@ -31,6 +33,8 @@ fn main() -> Result<(), String> {
                             .map_err(|e| e.to_string())?;
     let mut ship     = Ship::new(ARENA_WIDTH / 2.0, ARENA_HEIGHT / 2.0, -PI / 2.0);
     let mut commands = Commands::new();
+    let mut asteroids: Vec<Asteroid> = Vec::new();
+    asteroids.push(Asteroid::new(0.0, 512.0));
 
     let mut prev_time = Instant::now();
     let mut cur_time  = Instant::now();
@@ -67,10 +71,9 @@ fn main() -> Result<(), String> {
         }
         ship.update(dt, &commands);
         physics::update(dt, &mut ship.physics);
-        for b in &mut ship.bullets {
-            physics::update(dt, &mut b.physics);
-        }
-        renderer::render(&mut canvas, &mut ship).unwrap();
+        for b in &mut ship.bullets { physics::update(dt, &mut b.physics); }
+        for a in &mut asteroids    { physics::update(dt, &mut a.physics); }
+        renderer::render(&mut canvas, &mut ship, &asteroids).unwrap();
     }
     Ok(())
 }
