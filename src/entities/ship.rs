@@ -6,7 +6,15 @@ const ROTATION_RATE: f32 = 0.008;   // Radians per ms
 const THRUST_ACCEL:  f32 = 0.0005;  // Arena units / ms / ms button held
 const MAX_BULLETS: usize = 4;
 
-// Definition for 320x240
+/**
+ * Shapes are stored as matrixes rendered at 320x240.
+ * To draw at different resolutions, you must scale the matrix.
+ * These are the whole number scaling factors for different resolutions.
+ *    320 x  240  1
+ *    640 x  480  2
+ *   1280 x  960  4
+ *   1440 x 1080  6
+ */
 static FREEFALL: [(i8, i8); 6] = [(-1,  1),
                                   (-1, -1),
                                   (-2, -2),
@@ -39,6 +47,7 @@ impl<'a> Ship<'a> {
             },
             renderable: Renderable {
                 shape:  &FREEFALL,
+                scale:  4.0,
                 radius: 4,
                 direction: d
             },

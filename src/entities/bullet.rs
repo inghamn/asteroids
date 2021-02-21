@@ -25,6 +25,7 @@ impl<'a> Bullet<'a>
             },
             renderable: Renderable {
                 shape:  &BULLET_SHAPE,
+                scale:  1.0,
                 direction: 0.0,
                 radius: 1
             },
