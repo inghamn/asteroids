@@ -19,6 +19,8 @@ pub const ARENA_WIDTH:   f32 = 1024.0;
 pub const ARENA_HEIGHT:  f32 =  768.0;
 pub const WINDOW_WIDTH:  u32 = 1024;
 pub const WINDOW_HEIGHT: u32 =  768;
+pub const NUM_ASTEROIDS_MIN: u8 =  4;
+pub const NUM_ASTEROIDS_MAX: u8 = 11;
 
 fn main() -> Result<(), String> {
     let sdl    = sdl2::init()?;
@@ -33,8 +35,7 @@ fn main() -> Result<(), String> {
                             .map_err(|e| e.to_string())?;
     let mut ship     = Ship::new(ARENA_WIDTH / 2.0, ARENA_HEIGHT / 2.0, -PI / 2.0);
     let mut commands = Commands::new();
-    let mut asteroids: Vec<Asteroid> = Vec::new();
-    asteroids.push(Asteroid::new(0.0, 512.0));
+    let mut asteroids = Asteroid::generate_wave(NUM_ASTEROIDS_MIN);
 
     let mut prev_time = Instant::now();
     let mut cur_time  = Instant::now();
