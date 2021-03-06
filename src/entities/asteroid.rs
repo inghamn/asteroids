@@ -2,9 +2,9 @@ use rand::{thread_rng, Rng};
 use crate::components::physics::Physics;
 use crate::components::renderable::Renderable;
 
-const SIZE_LARGE: f32 = 12.5;
-const SIZE_MED:   f32 =  6.0;
-const SIZE_SMALL: f32 =  3.0;
+const SIZE_LARGE: f32 = 8.0;
+const SIZE_MED:   f32 = 5.0;
+const SIZE_SMALL: f32 = 2.5;
 
 const SPEED_MIN:  f32 = 0.0375; // Arena units per ms
 const SPEED_MAX:  f32 = 0.1;    // Arena units per ms

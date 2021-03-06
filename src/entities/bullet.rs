@@ -2,7 +2,7 @@ use crate::components::physics::Physics;
 use crate::components::renderable::Renderable;
 
 pub const BULLET_SPEED:    f32 = 0.75;   // Arena units per ms
-pub const BULLET_DURATION: i16 = 800;   // ms
+pub const BULLET_DURATION: i16 = 800;    // ms
 
 static BULLET_SHAPE: [(i8, i8); 1] = [(0,0)];
 
