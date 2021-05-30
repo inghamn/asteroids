@@ -71,9 +71,9 @@ fn main() -> Result<(), String> {
             }
         }
         ship.update(dt, &commands);
-        physics::update(dt, &mut ship.physics);
-        for b in &mut ship.bullets { physics::update(dt, &mut b.physics); }
-        for a in &mut asteroids    { physics::update(dt, &mut a.physics); }
+        physics::inertia(dt, &mut ship.physics);
+        for b in &mut ship.bullets { physics::inertia(dt, &mut b.physics); }
+        for a in &mut asteroids    { physics::inertia(dt, &mut a.physics); }
         renderer::render(&mut canvas, &mut ship, &asteroids).unwrap();
     }
     Ok(())

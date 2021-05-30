@@ -5,7 +5,7 @@ pub struct Physics {
     pub vy: f32,
 }
 
-pub fn update(dt: f32, physics: &mut Physics)
+pub fn inertia(dt: f32, physics: &mut Physics)
 {
     physics.x = position_wrapped_horizontal(physics.x, physics.vx, dt);
     physics.y = position_wrapped_vertical  (physics.y, physics.vy, dt);

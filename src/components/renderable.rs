@@ -1,7 +1,7 @@
 use sdl2::rect::Point;
 use sdl2::render::{WindowCanvas};
 
-const COORD_SCALE: f32 = 1.0; // Ration of arena size to window size
+pub const COORD_SCALE: f32 = 1.0; // Ration of arena size to window size
 
 pub struct Renderable<'a> {
     pub direction: f32, // Radians

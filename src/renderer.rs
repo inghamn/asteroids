@@ -5,6 +5,7 @@ use crate::entities::ship::Ship;
 
 use sdl2::pixels::Color;
 use sdl2::render::{WindowCanvas};
+use sdl2::gfx::primitives::DrawRenderer;
 
 pub fn render(canvas: &mut WindowCanvas, ship: &Ship, asteroids: &Vec<Asteroid>) -> Result<(), String>
 {
@@ -20,6 +21,13 @@ pub fn render(canvas: &mut WindowCanvas, ship: &Ship, asteroids: &Vec<Asteroid>)
     }
     for a in asteroids.iter() {
         draw_renderable(canvas, &a.renderable, a.physics.x, a.physics.y);
+
+        // Draw collision boundary
+        canvas.circle(a.physics.x         as i16,
+                      a.physics.y         as i16,
+                      (a.renderable.radius as f32 * a.renderable.scale * COORD_SCALE) as i16,
+                      Color::RGB(255, 255, 255)
+        );
     }
 
     canvas.present();
